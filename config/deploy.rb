@@ -83,6 +83,7 @@ namespace :deploy do
               execute :chmod, "-R 777 app/storage/meta"
               execute :chmod, "-R 777 app/storage/sessions"
               execute :chmod, "-R 777 app/storage/views"
+              execute :chmod, "-R 777 public/cdn"
           end
       end
     end
