@@ -2,7 +2,7 @@
 lock '3.3.5'
 
 set :application, 'my_app_name'
-set :repo_url, 'git@github.com:Metrakit/larabb.git'
+set :repo_url, 'git@bitbucket.org:Metrakit/minetopv2.git'
 
 set :ssh_options, { 
   forward_agent: true, 
@@ -14,7 +14,7 @@ set :ssh_options, {
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/var/www/capistranoTest'
+set :deploy_to, '/var/www/dev/video'
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -73,5 +73,21 @@ namespace :deploy do
       # end
     end
   end
+
+  desc "Permissions"
+  task :permissions do
+    on roles(:app) do
+          within release_path  do
+              execute :chmod, "-R 777 app/storage/cache"
+              execute :chmod, "-R 777 app/storage/logs"
+              execute :chmod, "-R 777 app/storage/meta"
+              execute :chmod, "-R 777 app/storage/sessions"
+              execute :chmod, "-R 777 app/storage/views"
+          end
+      end
+    end
+    
+
+  after :publishing, :permissions
 
 end
