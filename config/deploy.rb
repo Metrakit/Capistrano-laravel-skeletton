@@ -1,7 +1,7 @@
 # config valid only for current version of Capistrano
-lock '3.3.5'
+lock '3.4.0'
 
-set :application, 'my_app_name'
+set :application, 'laravel_skeletton'
 set :repo_url, 'git@bitbucket.org:Metrakit/minetopv2.git'
 
 set :ssh_options, { 
@@ -14,7 +14,7 @@ set :ssh_options, {
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/var/www/dev/video'
+set :deploy_to, '/var/www/dev/capistrano-dev'
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -41,29 +41,16 @@ set :deploy_to, '/var/www/dev/video'
 # set :keep_releases, 5
 
 
-namespace :composer do
-
-    desc "Run composer install in release_path."
-    task :install do
-        on roles(:all) do
-            within release_path do
-                execute "composer", "install", "-o"
-            end
-        end
-    end
-    task :update do
-        on roles(:all) do
-            within release_path do
-                execute "composer", "update", "-o"
-            end
-        end
-    end
-end 
-
 
 namespace :deploy do
 
-  after :publishing, "composer:install"
+  after :updated, "composer:install"
+
+  after :updated, "permission:authorize"
+
+  after :updated, "artisan:optimize"
+  after :updated, "artisan:migrate"
+  after :updated, "artisan:seed"
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
@@ -73,22 +60,5 @@ namespace :deploy do
       # end
     end
   end
-
-  desc "Permissions"
-  task :permissions do
-    on roles(:app) do
-          within release_path  do
-              execute :chmod, "-R 777 app/storage/cache"
-              execute :chmod, "-R 777 app/storage/logs"
-              execute :chmod, "-R 777 app/storage/meta"
-              execute :chmod, "-R 777 app/storage/sessions"
-              execute :chmod, "-R 777 app/storage/views"
-              execute :chmod, "-R 777 public/cdn"
-          end
-      end
-    end
-    
-
-  after :publishing, :permissions
 
 end
