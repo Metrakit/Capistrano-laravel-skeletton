@@ -1,3 +1,3 @@
 set :stage, :preprod
 
-server 'example.net', user: 'login', password: 'pwd', roles: %w{web app}
+server 'example.com', user: 'login', password: '', roles: %w{web app}

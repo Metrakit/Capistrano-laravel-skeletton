@@ -41,17 +41,28 @@ set :deploy_to, '/var/www/dev/capistrano-dev'
 # set :keep_releases, 5
 
 
+set :assets_path, -> { release_path.join('dev') }
+
 
 namespace :deploy do
 
+  # composer
   after :updated, "composer:install"
 
+  # permissions (chmod)
   after :updated, "permission:authorize"
 
+  # artisan
   after :updated, "artisan:optimize"
   after :updated, "artisan:migrate"
   after :updated, "artisan:seed"
 
+  # assets
+  after :updated, "npm:install"
+  after :updated, "bower:install"
+  after :updated, "grunt:build"
+
+  # clear cache
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
