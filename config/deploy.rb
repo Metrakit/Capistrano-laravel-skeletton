@@ -10,22 +10,11 @@ set :ssh_options, {
   keys: "~/.ssh/id_rsa.pub" 
 }
 
-set(:config_files, %w(
-  nginx.conf
-))
-
-set(:symlinks, [
-  {
-    source: "nginx.conf",
-    link: "/etc/apache2/sites-available/#{fetch(:application)}"
-  }
-])
-
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/var/www/dev/capistrano-dynamix'
+set :deploy_to, '/var/www/dev/dynamix'
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -64,4 +53,6 @@ set :keep_releases, 5
 
 set :assets_path, -> { release_path.join('dev') }
 
+set :migration_packages, fetch(:migration_packages, [])
+set :seed_packages, fetch(:seed_packages, [])
 
