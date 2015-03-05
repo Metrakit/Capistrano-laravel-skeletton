@@ -5,17 +5,15 @@
 namespace :composer do
 
     desc "Run composer install in release_path."
-    task :install do
-        on roles(:all) do
-            within release_path do
-                execute "composer", "install", "-o"
-            end
-        end
-    end
     task :update do
         on roles(:all) do
             within release_path do
-                execute "composer", "update", "-o"
+                target = fetch('vendor/composer', release_path)
+                if test "[ -d #{target} ]"
+                    execute "composer", "update", "-o" 
+                else
+                    execute "composer", "install", "-o"
+                end
             end
         end
     end

@@ -2,7 +2,7 @@
 lock '3.4.0'
 
 set :application, 'laravel_skeletton'
-set :repo_url, 'git@bitbucket.org:Metrakit/minetopv2.git'
+set :repo_url, 'git@github.com:dlepaux/dynamix.git'
 
 set :ssh_options, { 
   forward_agent: true, 
@@ -10,11 +10,22 @@ set :ssh_options, {
   keys: "~/.ssh/id_rsa.pub" 
 }
 
+set(:config_files, %w(
+  nginx.conf
+))
+
+set(:symlinks, [
+  {
+    source: "nginx.conf",
+    link: "/etc/apache2/sites-available/#{fetch(:application)}"
+  }
+])
+
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/var/www/dev/capistrano-dev'
+set :deploy_to, '/var/www/dev/capistrano-dynamix'
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -34,42 +45,23 @@ set :deploy_to, '/var/www/dev/capistrano-dev'
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 
+set :linked_dirs, fetch(:linked_dirs, []).push('dev/node_modules', 'dev/src/vendor', 'vendor')
+
+# Set the folders to create if they dont exist
+set :create_folders, fetch(:create_folders, []).push('vendor/dynamix')
+
+set :node_dir, 'dev/node_modules'
+set :bower_dir, 'dev/src/vendor'
+
+set :exec_time, Time.now
+
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
 # Default value for keep_releases is 5
-# set :keep_releases, 5
+set :keep_releases, 5
 
 
 set :assets_path, -> { release_path.join('dev') }
 
 
-namespace :deploy do
-
-  # composer
-  after :updated, "composer:install"
-
-  # permissions (chmod)
-  after :updated, "permission:authorize"
-
-  # artisan
-  after :updated, "artisan:optimize"
-  after :updated, "artisan:migrate"
-  after :updated, "artisan:seed"
-
-  # assets
-  after :updated, "npm:install"
-  after :updated, "bower:install"
-  after :updated, "grunt:build"
-
-  # clear cache
-  after :restart, :clear_cache do
-    on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
-    end
-  end
-
-end
