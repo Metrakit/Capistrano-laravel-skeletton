@@ -1,6 +1,12 @@
 # Capistrano-laravel-skeletton
 
-Tasks :
+This Capistrano project fully configures your project and sending safe in production.
+
+This skeletton is for projects using : 
+- Laravel 4 for the backend
+- npm, grunt and bower for manage your frontend
+
+### Tasks :
 - Clone a Laravel repo
 - Set 777 permissions on Storage folder
 - Use the "composer install/update" command
