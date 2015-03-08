@@ -1,6 +1,6 @@
 set :stage, :preprod
 
-server 'jordane.net', user: 'fxwr2205', password: '0uTyHG78@g', roles: %w{web app}
+server 'example.com', user: 'login', password: 'password', roles: %w{web app}
 
 # Set the method build build the assets
 set :grunt_build, 'prepod'
@@ -23,14 +23,14 @@ namespace :deploy do
   # artisan
   after :updated, "artisan:optimize"
 
-  # permissions (chmod)
-  after :updated, "permission:authorize"
-
   # databe migration and seeds
   after :updated, "artisan:migrate"
   after :updated, "artisan:seed"
   after :updated, "artisan:migrate_packages"
   after :updated, "artisan:seed_packages"  
+
+  # permissions (chmod)
+  after :updated, "permission:authorize"
 
   # clear cache
   after :restart, :clear_cache do
