@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.4.0'
+lock '3.3.5'
 
 set :application, 'laravel_skeletton'
 set :repo_url, 'git@github.com:dlepaux/dynamix.git'
@@ -51,7 +51,7 @@ set :exec_time, Time.now
 set :keep_releases, 5
 
 
-set :assets_path, -> { release_path.join('dev') }
+set :assets_path, -> { release_path.join('theme/**/assets') }
 
 set :migration_packages, fetch(:migration_packages, [])
 set :seed_packages, fetch(:seed_packages, [])

@@ -1,6 +1,6 @@
 set :stage, :preprod
 
-server 'example.com', user: 'login', password: 'password', roles: %w{web app}
+server 'example.com', user: 'login', password: 'P@$$w0rd', roles: %w{web app}
 
 # Set the method build build the assets
 set :grunt_build, 'prepod'
