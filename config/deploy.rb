@@ -1,20 +1,22 @@
 # config valid only for current version of Capistrano
 lock '3.3.5'
 
-set :application, 'laravel_skeletton'
-set :repo_url, 'git@github.com:dlepaux/dynamix.git'
+set :application, 'minetop'
+set :repo_url, 'git@github.com:Metrakit/l5-template.git'
 
-set :ssh_options, { 
-  forward_agent: true, 
-  paranoid: true, 
-  keys: "~/.ssh/id_rsa.pub" 
+set :branch, fetch(:branch, "minetop")
+
+set :ssh_options, {
+  forward_agent: true,
+  paranoid: true,
+  keys: "~/.ssh/id_rsa.pub"
 }
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/var/www/dev/dynamix'
+set :deploy_to, '/var/www/minetop/v2'
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -29,18 +31,12 @@ set :deploy_to, '/var/www/dev/dynamix'
 # set :pty, true
 
 # Default value for :linked_files is []
-# set :linked_files, fetch(:linked_files, []).push('config/database.yml')
+ set :linked_files, fetch(:linked_files, []).push('.env')
 
 # Default value for linked_dirs is []
-# set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
+ set :linked_dirs, fetch(:linked_dirs, []).push('storage')
 
-set :linked_dirs, fetch(:linked_dirs, []).push('dev/node_modules', 'dev/src/vendor', 'vendor')
-
-# Set the folders to create if they dont exist
-set :create_folders, fetch(:create_folders, []).push('vendor/dynamix')
-
-set :node_dir, 'dev/node_modules'
-set :bower_dir, 'dev/src/vendor'
+#set :linked_dirs, fetch(:linked_dirs, []).push('vendor')
 
 set :exec_time, Time.now
 
@@ -49,10 +45,3 @@ set :exec_time, Time.now
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
-
-
-set :assets_path, -> { release_path.join('theme/**/assets') }
-
-set :migration_packages, fetch(:migration_packages, [])
-set :seed_packages, fetch(:seed_packages, [])
-

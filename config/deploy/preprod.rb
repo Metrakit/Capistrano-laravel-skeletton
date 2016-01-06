@@ -2,23 +2,22 @@ set :stage, :preprod
 
 server 'example.com', user: 'login', password: 'P@$$w0rd', roles: %w{web app}
 
-# Set the method build build the assets
-set :grunt_build, 'prepod'
-
-
 namespace :deploy do
 
-  after :updated, "folder:create"
+  fetch(:migrate_question)
+  fetch(:seed_question)
 
-  after :updated, "environment:prepare"
+  # after :updated, "folder:create"
+
+  # after :updated, "environment:prepare"
 
   # composer
-  after :updated, "composer:update"
+  after :updated, "composer:install"
 
   # assets
-  after :updated, "npm:update"
-  after :updated, "bower:update"
-  after :updated, "grunt:build"
+  after :updated, "npm:install"
+  after :updated, "bower:install"
+  after :updated, "gulp:build"
 
   # artisan
   after :updated, "artisan:optimize"
@@ -26,8 +25,6 @@ namespace :deploy do
   # databe migration and seeds
   after :updated, "artisan:migrate"
   after :updated, "artisan:seed"
-  after :updated, "artisan:migrate_packages"
-  after :updated, "artisan:seed_packages"  
 
   # permissions (chmod)
   after :updated, "permission:authorize"
